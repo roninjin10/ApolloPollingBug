@@ -1,0 +1,7 @@
+{
+  "name": "apollo-bug",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "William Cory <william.cory@rubrik.com>",
+  "license": "MIT"
+}
