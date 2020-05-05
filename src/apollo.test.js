@@ -1,5 +1,6 @@
 import * as React from "react";
 import { renderHook } from "@testing-library/react-hooks";
+import { wait } from "@testing-library/react";
 import { useQuery } from "react-apollo";
 import { MockedProvider } from "@apollo/react-testing";
 import gql from "graphql-tag";
@@ -77,17 +78,16 @@ it("should not poll when variables change if skip is true", async () => {
     }
   );
 
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  const expectQueryToSkip = () => expect(wait(() => {
+    if (getCallCount()) {
+      return
+    }
+    throw new Error()
+  })).rejects.toThrow()
 
-  expect(result.data).toBe(undefined);
-
-  expect(getCallCount()).toBe(0);
+  await expectQueryToSkip()
 
   rerender(propsWithChangedVariables);
 
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
-  expect(result.data).toBe(undefined);
-
-  expect(getCallCount()).toBe(0);
+  await expectQueryToSkip()
 });
